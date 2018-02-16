@@ -1,4 +1,4 @@
-Run: npm script
+Run: npm start
 
 Currently loading Top 30 recent fcc contributors, outputs skeleton information. (To be updated)
 

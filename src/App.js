@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './index.scss'
 import axios from 'axios';
-
+import ReactDOM from 'react-dom';
 
 /*User Story 1: I can see a table of the freeCodeCamp campers who've earned the most brownie points in the past 30 days.
 
@@ -19,36 +19,67 @@ class Board extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      list: []
+      isToggleOn: true,
+      recentList: [],
+      alltimeList: []
     };
   }
   
   // So we may use setState to update component when data retrieved 
   componentDidMount() {
-    var url = "https://fcctop100.herokuapp.com/api/fccusers/top/recent/";
+    var urlRecent = "https://fcctop100.herokuapp.com/api/fccusers/top/recent/";
+    var urlAlltime = "https://fcctop100.herokuapp.com/api/fccusers/top/alltime/";
     console.log("mounted");
-    fetch(url)
-      .then(res => res.json())
-      .then((data) => {
-       console.log("This is the JSON, ", data);
-        this.setState({
-          list: data,
-        });        
-      })
-      .catch(err => {console.log(err);
-    });
+    fetch(urlRecent)
+    .then(res => res.json())
+    .then((data) => {
+     console.log("This is the JSON, ", data);
+      this.setState({
+        recentList: data,
+      });        
+    })
+    .catch(err => {console.log(err);
+  });
+  fetch(urlAlltime)
+  .then(res => res.json())
+  .then((data) => {
+   console.log("This is the JSON, ", data);
+    this.setState({
+      alltimeList: data,
+    });        
+  })
+  .catch(err => {console.log(err);
+});
+
+  }
+
+  handleClick() {
+    ReactDOM.hydrate(
+    // this.setState(prevState => ({
+    //   isToggleOn: !prevState.isToggleOn
+      <div className="top">
+    {this.state.alltimeList.map(lists => 
+      <tr>
+        <td key={lists.id}> {lists.username}: {lists.alltime} </td>
+      </tr>
+    )};
+    </div>
+    )
   }
 
   render() {
       return(
+        <div className="all">
+        <button onClick={this.handleClick()}>Alltime</button>   
         <div className="container-fluid">
             <h1>Top 30 Recent</h1>
-        {this.state.list.map(lists => 
+        {this.state.recentList.map(lists => 
           <tr>
             <td> {lists.username}: {lists.alltime} </td>
           </tr>
         )};
-            
+         
+        </div>
         </div>
       ); 
 
